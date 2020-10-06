@@ -77,47 +77,47 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/form',
+    path: '/comment',
     component: Layout,
     children: [
       {
         path: 'index',
         name: 'Comment',
         component: () => import('@/views/form/index'),
-        meta: { title: 'Form', icon: 'form' }
+        meta: { title: 'Comment', icon: 'form' }
       }
     ]
   },
   {
-    path: '/options',
+    path: '/option',
     component: Layout,
     children: [
       {
         path: 'index',
-        name: 'Options',
+        name: 'Option',
         component: () => import('@/views/form/index'),
-        meta: { title: 'Options', icon: 'form' }
+        meta: { title: 'Option', icon: 'form' }
       }
     ]
   },
   {
     path: '/meta',
     component: Layout,
-    redirect: '/meta/categories',
+    redirect: '/meta/category',
     name: 'Meta',
     meta: { title: 'Meta', icon: 'el-icon-s-help' },
     children: [
       {
-        path: 'categories',
-        name: 'Categories',
+        path: 'category',
+        name: 'Category',
         component: () => import('@/views/table/index'),
-        meta: { title: 'Categories', icon: 'table' }
+        meta: { title: 'Category', icon: 'table' }
       },
       {
-        path: 'tags',
-        name: 'Tags',
+        path: 'tag',
+        name: 'Tag',
         component: () => import('@/views/tree/index'),
-        meta: { title: 'Tags', icon: 'tree' }
+        meta: { title: 'Tag', icon: 'tree' }
       }
     ]
   },
