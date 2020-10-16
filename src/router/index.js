@@ -95,7 +95,7 @@ export const constantRoutes = [
       {
         path: 'index',
         name: 'Option',
-        component: () => import('@/views/form/index'),
+        component: () => import('@/views/option/index'),
         meta: { title: 'Option', icon: 'form' }
       }
     ]
