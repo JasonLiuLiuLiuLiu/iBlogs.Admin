@@ -61,25 +61,25 @@
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Name" width="150px" align="center">
+      <el-table-column label="Name" width="200px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.Name }}</span>
+          <span>{{ row.name }}</span>
         </template>
       </el-table-column>
       <el-table-column label="Value" min-width="150px">
         <template slot-scope="{row}">
-          <span class="link-type">{{ row.Value }}</span>
+          <span class="link-type">{{ row.value }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Description" width="110px" align="center">
+      <el-table-column label="Description" width="500px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.Description }}</span>
+          <span>{{ row.description }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="Status" class-name="status-col" width="100">
+      <el-table-column label="Status" class-name="status-col" width="300">
         <template slot-scope="{row}">
-          <el-tag :type="row.status | statusFilter">
+          <el-tag :type="row.status">
             {{ row.status }}
           </el-tag>
         </template>
@@ -89,8 +89,8 @@
     <pagination
       v-show="total>0"
       :total="total"
-      :page.sync="listQuery.page"
-      :limit.sync="listQuery.limit"
+      :page.sync="listQuery.pageNum"
+      :limit.sync="listQuery.pageSize"
       @pagination="getList"
     />
 
@@ -164,7 +164,7 @@
 </template>
 
 <script>
-import { fetchList, fetchPv, createArticle, updateArticle } from '@/api/content'
+import { fetchList, fetchPv, createArticle, updateArticle } from '@/api/option'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -206,12 +206,8 @@ export default {
       total: 0,
       listLoading: true,
       listQuery: {
-        page: 1,
-        limit: 20,
-        importance: undefined,
-        title: undefined,
-        type: undefined,
-        sort: '+id'
+        pageNum: 1,
+        pageSize: 20
       },
       importanceOptions: [1, 2, 3],
       calendarTypeOptions,
@@ -250,7 +246,7 @@ export default {
     getList() {
       this.listLoading = true
       fetchList(this.listQuery).then(response => {
-        this.list = response.data.items
+        this.list = response.data.list
         this.total = response.data.total
 
         // Just to simulate the time of the request
@@ -260,7 +256,7 @@ export default {
       })
     },
     handleFilter() {
-      this.listQuery.page = 1
+      this.listQuery.pageNum = 1
       this.getList()
     },
     handleModifyStatus(row, status) {
