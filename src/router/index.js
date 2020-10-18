@@ -77,30 +77,6 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/comment',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        name: 'Comment',
-        component: () => import('@/views/form/index'),
-        meta: { title: 'Comment', icon: 'el-icon-chat-dot-round' }
-      }
-    ]
-  },
-  {
-    path: '/option',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        name: 'Option',
-        component: () => import('@/views/option/index'),
-        meta: { title: 'Option', icon: 'el-icon-setting' }
-      }
-    ]
-  },
-  {
     path: '/meta',
     component: Layout,
     redirect: '/meta/category',
@@ -118,6 +94,30 @@ export const constantRoutes = [
         name: 'Tag',
         component: () => import('@/views/tree/index'),
         meta: { title: 'Tag', icon: 'el-icon-collection-tag' }
+      }
+    ]
+  },
+  {
+    path: '/comment',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'Comment',
+        component: () => import('@/views/comment/index'),
+        meta: { title: 'Comment', icon: 'el-icon-chat-dot-round' }
+      }
+    ]
+  },
+  {
+    path: '/option',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'Option',
+        component: () => import('@/views/option/index'),
+        meta: { title: 'Option', icon: 'el-icon-setting' }
       }
     ]
   },
