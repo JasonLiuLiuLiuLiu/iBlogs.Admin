@@ -127,8 +127,9 @@ export default {
             type: 'success',
             duration: 5 * 1000
           })
-          this.$store.dispatch('user/logout')
-          this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+          this.$store.dispatch('user/logout').then(() => {
+            this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+          })
         })
       })
     },
