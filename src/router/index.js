@@ -60,19 +60,19 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/content/article',
     name: 'Content',
-    meta: { title: 'Content', icon: 'el-icon-s-help' },
+    meta: { title: 'Content', icon: 'el-icon-reading' },
     children: [
       {
         path: 'article',
         name: 'Article',
         component: () => import('@/views/table/index'),
-        meta: { title: 'Article', icon: 'table' }
+        meta: { title: 'Article', icon: 'el-icon-notebook-1' }
       },
       {
         path: 'page',
         name: 'Page',
         component: () => import('@/views/tree/index'),
-        meta: { title: 'Page', icon: 'tree' }
+        meta: { title: 'Page', icon: 'el-icon-notebook-2' }
       }
     ]
   },
@@ -84,7 +84,7 @@ export const constantRoutes = [
         path: 'index',
         name: 'Comment',
         component: () => import('@/views/form/index'),
-        meta: { title: 'Comment', icon: 'form' }
+        meta: { title: 'Comment', icon: 'el-icon-chat-dot-round' }
       }
     ]
   },
@@ -96,7 +96,7 @@ export const constantRoutes = [
         path: 'index',
         name: 'Option',
         component: () => import('@/views/option/index'),
-        meta: { title: 'Option', icon: 'form' }
+        meta: { title: 'Option', icon: 'el-icon-setting' }
       }
     ]
   },
@@ -111,13 +111,13 @@ export const constantRoutes = [
         path: 'category',
         name: 'Category',
         component: () => import('@/views/table/index'),
-        meta: { title: 'Category', icon: 'table' }
+        meta: { title: 'Category', icon: 'el-icon-folder-opened' }
       },
       {
         path: 'tag',
         name: 'Tag',
         component: () => import('@/views/tree/index'),
-        meta: { title: 'Tag', icon: 'tree' }
+        meta: { title: 'Tag', icon: 'el-icon-collection-tag' }
       }
     ]
   },
@@ -126,8 +126,8 @@ export const constantRoutes = [
     component: Layout,
     children: [
       {
-        path: 'https://github.com/liuzhenyulive/iblogs.admin',
-        meta: { title: 'Nacos', icon: 'link' }
+        path: 'http://192.168.101.1:8848/nacos',
+        meta: { title: 'Nacos', icon: 'el-icon-link' }
       }
     ]
   },
@@ -137,7 +137,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'https://github.com/liuzhenyulive/iblogs.admin',
-        meta: { title: 'Github', icon: 'link' }
+        meta: { title: 'Github', icon: 'el-icon-link' }
       }
     ]
   },
