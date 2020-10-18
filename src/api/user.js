@@ -21,3 +21,19 @@ export function logout() {
     method: 'post'
   })
 }
+
+export function profile(data) {
+  return request({
+    url: '/user/profile',
+    method: 'post',
+    data
+  })
+}
+
+export function password(data) {
+  return request({
+    url: '/user/password',
+    method: 'post',
+    data
+  })
+}

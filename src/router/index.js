@@ -131,7 +131,6 @@ export const constantRoutes = [
       }
     ]
   },
-
   {
     path: 'github',
     component: Layout,
@@ -139,6 +138,20 @@ export const constantRoutes = [
       {
         path: 'https://github.com/liuzhenyulive/iblogs.admin',
         meta: { title: 'Github', icon: 'link' }
+      }
+    ]
+  },
+  {
+    path: '/profile',
+    component: Layout,
+    redirect: '/profile/index',
+    hidden: true,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/profile/index'),
+        name: 'Profile',
+        meta: { title: 'Profile', icon: 'user', noCache: true }
       }
     ]
   },
