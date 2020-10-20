@@ -151,20 +151,31 @@ export default {
       })
     },
     deleteComment(comment) {
-      this.listLoading = true
-      deleteComment({ id: comment.id }).then(response => {
-        const index = this.list.indexOf(comment)
-        if (index > -1) {
-          this.list.splice(index, 1)
-        }
-        this.$message({
-          message: 'comment deleted successfully',
-          type: 'success'
+      this.$confirm('This will permanently delete the comment. Continue?', 'Warning', {
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      }).then(() => {
+        this.listLoading = true
+        deleteComment({ id: comment.id }).then(response => {
+          const index = this.list.indexOf(comment)
+          if (index > -1) {
+            this.list.splice(index, 1)
+          }
+          this.$message({
+            message: 'comment deleted successfully',
+            type: 'success'
+          })
+          // Just to simulate the time of the request
+          setTimeout(() => {
+            this.listLoading = false
+          }, 1.5 * 1000)
         })
-        // Just to simulate the time of the request
-        setTimeout(() => {
-          this.listLoading = false
-        }, 1.5 * 1000)
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: 'Delete canceled'
+        })
       })
     },
     updateStatus(row) {
