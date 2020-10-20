@@ -10,7 +10,7 @@ export function page(data) {
 
 export function deleteComment(data) {
   return request({
-    url: '/delete/delete',
+    url: '/comment/delete',
     method: 'post',
     data
   })

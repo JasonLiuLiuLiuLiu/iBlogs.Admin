@@ -57,16 +57,20 @@
           <span>{{ row.content }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Status" class-name="status-col" width="100">
+      <el-table-column label="Status" class-name="status-col" align="center" width="200">
         <template slot-scope="{row}">
-          <el-tag :type="row.status | statusFilter">
+          <el-switch
+            v-model="row.statusBool"
+            @change="updateStatus(row)"
+          />
+          <el-tag :type="row.status | statusFilter" class="statusTag">
             {{ row.status }}
           </el-tag>
         </template>
       </el-table-column>
       <el-table-column label="Actions" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-button type="warning" size="mini" @click="handleUpdate(row)">
+          <el-button type="warning" size="mini" @click="deleteComment(row)">
             Delete
           </el-button>
         </template>
@@ -96,10 +100,13 @@ export default {
   filters: {
     statusFilter(status) {
       const statusMap = {
-        1: 'success',
-        0: 'danger'
+        'Approved': 'success',
+        'Pending': 'danger'
       }
       return statusMap[status]
+    },
+    statusBoolFilter(status) {
+      return status === 'Approved'
     },
     timeFilter(time) {
       return parseTime(time, '{y}-{m}-{d} {h}:{i}')
@@ -131,9 +138,43 @@ export default {
     getList() {
       this.listLoading = true
       page(this.listQuery).then(response => {
-        this.list = response.data.list
+        this.list = response.data.list.map(v => {
+          v.statusBool = v.status === 'Approved' //  will be used when user click the cancel botton
+          return v
+        })
         this.total = response.data.total
 
+        // Just to simulate the time of the request
+        setTimeout(() => {
+          this.listLoading = false
+        }, 1.5 * 1000)
+      })
+    },
+    deleteComment(comment) {
+      this.listLoading = true
+      deleteComment({ id: comment.id }).then(response => {
+        const index = this.list.indexOf(comment)
+        if (index > -1) {
+          this.list.splice(index, 1)
+        }
+        this.$message({
+          message: 'comment deleted successfully',
+          type: 'success'
+        })
+        // Just to simulate the time of the request
+        setTimeout(() => {
+          this.listLoading = false
+        }, 1.5 * 1000)
+      })
+    },
+    updateStatus(row) {
+      this.listLoading = true
+      updateStatus({ commentId: row.id, status: row.statusBool ? 1 : 0 }).then(response => {
+        row.status = row.statusBool ? 'Approved' : 'Pending'
+        this.$message({
+          message: 'Status update successfully',
+          type: 'success'
+        })
         // Just to simulate the time of the request
         setTimeout(() => {
           this.listLoading = false
@@ -143,3 +184,8 @@ export default {
   }
 }
 </script>
+<style>
+.statusTag {
+  margin-left: 10px;
+}
+</style>
