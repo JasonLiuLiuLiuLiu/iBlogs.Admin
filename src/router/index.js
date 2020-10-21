@@ -65,13 +65,13 @@ export const constantRoutes = [
       {
         path: 'article',
         name: 'Article',
-        component: () => import('@/views/table/index'),
+        component: () => import('@/views/option/index'),
         meta: { title: 'Article', icon: 'el-icon-notebook-1' }
       },
       {
         path: 'page',
         name: 'Page',
-        component: () => import('@/views/tree/index'),
+        component: () => import('@/views/option/index'),
         meta: { title: 'Page', icon: 'el-icon-notebook-2' }
       }
     ]
@@ -86,13 +86,13 @@ export const constantRoutes = [
       {
         path: 'category',
         name: 'Category',
-        component: () => import('@/views/table/index'),
+        component: () => import('@/views/meta/category'),
         meta: { title: 'Category', icon: 'el-icon-folder-opened' }
       },
       {
         path: 'tag',
         name: 'Tag',
-        component: () => import('@/views/tree/index'),
+        component: () => import('@/views/meta/tag'),
         meta: { title: 'Tag', icon: 'el-icon-collection-tag' }
       }
     ]

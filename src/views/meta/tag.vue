@@ -12,8 +12,10 @@
       <el-table-column
         label="ID"
         prop="id"
+        sortable="custom"
         align="center"
         width="80"
+        :class-name="getSortClass('id')"
       >
         <template slot-scope="{row}">
           <span>{{ row.id }}</span>
@@ -158,6 +160,10 @@ export default {
           type: 'error'
         })
       }
+    },
+    getSortClass: function(key) {
+      const sort = this.listQuery.sort
+      return sort === `+${key}` ? 'ascending' : 'descending'
     }
   }
 }
