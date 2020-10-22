@@ -57,12 +57,8 @@
           <span>{{ row.content }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Status" class-name="status-col" align="center" width="200">
+      <el-table-column label="Status" class-name="status-col" align="center" width="100">
         <template slot-scope="{row}">
-          <el-switch
-            v-model="row.statusBool"
-            @change="updateStatus(row)"
-          />
           <el-tag :type="row.status | statusFilter" class="statusTag">
             {{ row.status }}
           </el-tag>
@@ -72,6 +68,9 @@
         <template slot-scope="{row}">
           <el-button type="warning" size="mini" @click="deleteComment(row)">
             Delete
+          </el-button>
+          <el-button :type="row.statusBool?'':'success'" size="mini" @click="updateStatus(row)">
+            {{ row.statusBool ? 'Pending' : 'Approve' }}
           </el-button>
         </template>
       </el-table-column>
@@ -101,7 +100,7 @@ export default {
     statusFilter(status) {
       const statusMap = {
         'Approved': 'success',
-        'Pending': 'danger'
+        'Pending': 'info'
       }
       return statusMap[status]
     },
@@ -180,6 +179,7 @@ export default {
     },
     updateStatus(row) {
       this.listLoading = true
+      row.statusBool = !row.statusBool
       updateStatus({ commentId: row.id, status: row.statusBool ? 1 : 0 }).then(response => {
         row.status = row.statusBool ? 'Approved' : 'Pending'
         this.$message({
