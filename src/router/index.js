@@ -65,13 +65,13 @@ export const constantRoutes = [
       {
         path: 'article',
         name: 'Article',
-        component: () => import('@/views/option/index'),
+        component: () => import('@/views/content/index'),
         meta: { title: 'Article', icon: 'el-icon-notebook-1' }
       },
       {
         path: 'page',
         name: 'Page',
-        component: () => import('@/views/option/index'),
+        component: () => import('@/views/content/index'),
         meta: { title: 'Page', icon: 'el-icon-notebook-2' }
       }
     ]
