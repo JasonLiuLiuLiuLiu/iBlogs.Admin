@@ -86,13 +86,13 @@ export const constantRoutes = [
       {
         path: 'category',
         name: 'Category',
-        component: () => import('@/views/meta/category'),
+        component: () => import('@/views/meta/index'),
         meta: { title: 'Category', icon: 'el-icon-folder-opened' }
       },
       {
         path: 'tag',
         name: 'Tag',
-        component: () => import('@/views/meta/tag'),
+        component: () => import('@/views/meta/index'),
         meta: { title: 'Tag', icon: 'el-icon-collection-tag' }
       }
     ]

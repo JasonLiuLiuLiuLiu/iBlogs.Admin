@@ -180,6 +180,11 @@ export default {
     }
   },
   created() {
+    if (this.$route.fullPath.endsWith('category')) {
+      this.listQuery.type = 1
+    } else {
+      this.listQuery.type = 0
+    }
     this.getList()
   },
   methods: {
