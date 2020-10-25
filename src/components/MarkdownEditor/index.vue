@@ -1,42 +1,27 @@
+<!--https://github.com/nhn/tui.editor/tree/master/apps/vue-editor-->
 <template>
-  <div id="editorSection"></div>
+  <editor ref="toastuiEditor" />
 </template>
-
 <script>
-import Editor from 'tui-editor' /* ES6 */
-import 'tui-editor/dist/tui-editor.css' // editor's ui
-import 'tui-editor/dist/tui-editor-contents.css' // editor's content
-import 'codemirror/lib/codemirror.css' // codemirror
-import 'highlight.js/styles/github.css' // code block highlight
+import 'codemirror/lib/codemirror.css'
+import '@toast-ui/editor/dist/toastui-editor.css'
+
+import { Editor } from '@toast-ui/vue-editor'
 
 export default {
-  props: {
-    content: String,
-    value: String
-  },
-  mounted() {
-    this.initialize()
-  },
-  beforeDestroy() {
-    this.tuieditor = null
-    delete this.tuieditor
+  components: {
+    editor: Editor
   },
   methods: {
-    initialize() {
-      if (this.$el) {
-        this.tuieditor = new Editor({
-          el: document.querySelector('#editorSection'),
-          initialEditType: 'markdown',
-          previewStyle: 'vertical',
-          height: '300px'
-        })
-
-        this.tuieditor.getHtml()
-      }
+    scroll() {
+      this.$refs.toastuiEditor.invoke('scrollTop', 10)
+    },
+    moveTop() {
+      this.$refs.toastuiEditor.invoke('moveCursorToStart')
+    },
+    getHtml() {
+      let html = this.$refs.toastuiEditor.invoke('getHtml')
     }
   }
 }
 </script>
-
-<style>
-</style>
