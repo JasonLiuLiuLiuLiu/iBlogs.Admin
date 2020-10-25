@@ -74,10 +74,13 @@
           >
             Edit
           </el-button>
-          <el-button type="warning" size="mini" icon="el-icon-delete"  @click="deleteComment(row)">
+          <el-button type="warning" size="mini" icon="el-icon-delete" @click="deleteComment(row)">
             Delete
           </el-button>
-          <el-button :type="row.statusBool?'':'success'" :icon="row.statusBool?'el-icon-cloudy-and-sunny':'el-icon-sunrise'" size="mini" @click="updateStatus(row)">
+          <el-button
+            :type="row.statusBool?'':'success'"
+            :icon="row.statusBool?'el-icon-cloudy-and-sunny':'el-icon-sunrise'" size="mini"
+            @click="updateStatus(row)">
             {{ row.statusBool ? 'Draft' : 'Publish' }}
           </el-button>
         </template>
@@ -95,7 +98,7 @@
 </template>
 
 <script>
-import { page } from '@/api/content'
+import { page, updateStatus, deleteContent } from '@/api/content'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -159,15 +162,15 @@ export default {
         }, 1.5 * 1000)
       })
     },
-    deleteComment(comment) {
+    deleteComment(data) {
       this.$confirm('This will permanently delete the comment. Continue?', 'Warning', {
         confirmButtonText: 'OK',
         cancelButtonText: 'Cancel',
         type: 'warning'
       }).then(() => {
         this.listLoading = true
-        /* deleteComment({ id: comment.id }).then(response => {
-          const index = this.list.indexOf(comment)
+        deleteContent({ id: data.id }).then(response => {
+          const index = this.list.indexOf(data)
           if (index > -1) {
             this.list.splice(index, 1)
           }
@@ -179,7 +182,7 @@ export default {
           setTimeout(() => {
             this.listLoading = false
           }, 1.5 * 1000)
-        })*/
+        })
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -190,17 +193,17 @@ export default {
     updateStatus(row) {
       this.listLoading = true
       row.statusBool = !row.statusBool
-      /* updateStatus({ commentId: row.id, status: row.statusBool ? 1 : 0 }).then(response => {
-         row.status = row.statusBool ? 'Approved' : 'Pending'
-         this.$message({
-           message: 'Status update successfully',
-           type: 'success'
-         })
-         // Just to simulate the time of the request
-         setTimeout(() => {
-           this.listLoading = false
-         }, 1.5 * 1000)
-       })*/
+      updateStatus({ id: row.id, status: row.statusBool ? 1 : 0 }).then(response => {
+        row.status = row.statusBool ? 'Published' : 'Draft'
+        this.$message({
+          message: 'Status update successfully',
+          type: 'success'
+        })
+        // Just to simulate the time of the request
+        setTimeout(() => {
+          this.listLoading = false
+        }, 1.5 * 1000)
+      })
     }
   }
 }

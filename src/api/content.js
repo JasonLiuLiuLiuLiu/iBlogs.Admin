@@ -7,3 +7,19 @@ export function page(data) {
     data
   })
 }
+
+export function updateStatus(data) {
+  return request({
+    url: '/content/status',
+    method: 'post',
+    data
+  })
+}
+
+export function deleteContent(data) {
+  return request({
+    url: '/content/delete',
+    method: 'post',
+    data
+  })
+}

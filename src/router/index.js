@@ -73,6 +73,13 @@ export const constantRoutes = [
         name: 'Page',
         component: () => import('@/views/content/index'),
         meta: { title: 'Page', icon: 'el-icon-notebook-2' }
+      },
+      {
+        path: 'edit',
+        hidden: true,
+        component: () => import('@/views/content/edit'),
+        name: 'Edit',
+        meta: { title: 'Edit', icon: 'el-icon-edit', noCache: true }
       }
     ]
   },
