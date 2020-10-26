@@ -2,74 +2,112 @@
   <div class="createPost-container">
     <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container">
 
-      <sticky :z-index="10" :class-name="'sub-navbar '+postForm.status">
-        <CommentDropdown v-model="postForm.comment_disabled" />
-        <PlatformDropdown v-model="postForm.platforms" />
-        <SourceUrlDropdown v-model="postForm.source_uri" />
-        <el-button v-loading="loading" style="margin-left: 10px;" type="success" @click="submitForm">
-          Publish
-        </el-button>
-        <el-button v-loading="loading" type="warning" @click="draftForm">
-          Draft
-        </el-button>
-      </sticky>
-
       <div class="createPost-main-container">
         <el-row>
-          <Warning />
-
-          <el-col :span="24">
-            <el-form-item style="margin-bottom: 40px;" prop="title">
-              <MDinput v-model="postForm.title" :maxlength="100" name="name" required>
+          <el-col :span="12">
+            <el-form-item prop="title">
+              <el-input v-model="postForm.title" :maxlength="100" placeholder="文章标题" name="name" required>
                 Title
-              </MDinput>
+              </el-input>
             </el-form-item>
-
-            <div class="postInfo-container">
-              <el-row>
-                <el-col :span="8">
-                  <el-form-item label-width="60px" label="Author:" class="postInfo-container-item">
-                    <el-select v-model="postForm.author" :remote-method="getRemoteUserList" filterable default-first-option remote placeholder="Search user">
-                      <el-option v-for="(item,index) in userListOptions" :key="item+index" :label="item" :value="item" />
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-
-                <el-col :span="10">
-                  <el-form-item label-width="120px" label="Publish Time:" class="postInfo-container-item">
-                    <el-date-picker v-model="displayTime" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="Select date and time" />
-                  </el-form-item>
-                </el-col>
-
-                <el-col :span="6">
-                  <el-form-item label-width="90px" label="Importance:" class="postInfo-container-item">
-                    <el-rate
-                      v-model="postForm.importance"
-                      :max="3"
-                      :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
-                      :low-threshold="1"
-                      :high-threshold="3"
-                      style="display:inline-block"
-                    />
-                  </el-form-item>
-                </el-col>
-              </el-row>
-            </div>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item>
+              <el-input placeholder="自定义访问路径,如 my-first-article 默认为文章id" v-model="input1">
+                <template slot="prepend">Https://iblogs.site/article/</template>
+              </el-input>
+            </el-form-item>
           </el-col>
         </el-row>
-
-        <el-form-item style="margin-bottom: 40px;" label-width="70px" label="Summary:">
-          <el-input v-model="postForm.content_short" :rows="1" type="textarea" class="article-textarea" autosize placeholder="Please enter the content" />
-          <span v-show="contentShortLength" class="word-counter">{{ contentShortLength }}words</span>
-        </el-form-item>
-
-        <el-form-item prop="content" style="margin-bottom: 30px;">
-          <markdown-editor ref="editor" />
-        </el-form-item>
-
-        <el-form-item prop="image_uri" style="margin-bottom: 30px;">
-          <Upload v-model="postForm.image_uri" />
-        </el-form-item>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item prop="title">
+              <el-input v-model="postForm.title" :maxlength="100" placeholder="文章标题" name="name" required>
+                Title
+              </el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item>
+              <el-input placeholder="自定义访问路径,如 my-first-article 默认为文章id" v-model="input1">
+                <template slot="prepend">Https://iblogs.site/article/</template>
+              </el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-form-item prop="content" style="margin-bottom: 30px;">
+            <markdown-editor ref="editor" />
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-col :span="6">
+            <el-form-item>
+              <el-switch
+                style="display: block"
+                v-model="value2"
+                active-color="#13ce66"
+                inactive-color="#ff4949"
+                active-text="允许Ping"
+                inactive-text="禁用Ping">
+              </el-switch>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item>
+              <el-switch
+                style="display: block"
+                v-model="value2"
+                active-color="#13ce66"
+                inactive-color="#ff4949"
+                active-text="启用评论"
+                inactive-text="禁用评论">
+              </el-switch>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item>
+              <el-switch
+                style="display: block"
+                v-model="value2"
+                active-color="#13ce66"
+                inactive-color="#ff4949"
+                active-text="允许订阅"
+                inactive-text="禁止订阅">
+              </el-switch>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item>
+              <el-switch
+                style="display: block"
+                v-model="value2"
+                active-color="#13ce66"
+                inactive-color="#ff4949"
+                active-text="启用缩略图"
+                inactive-text="禁用缩略图">
+              </el-switch>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="6">
+            <el-form-item>
+              <el-date-picker
+                v-model="value1"
+                type="datetime"
+                placeholder="选择日期时间">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="5" :offset="13">
+            <el-form-item>
+              <el-button>返回列表</el-button>
+              <el-button type="primary">立即发布</el-button>
+              <el-button type="warning">保存为草稿</el-button>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </div>
     </el-form>
   </div>
@@ -77,12 +115,7 @@
 
 <script>
 import MarkdownEditor from '@/components/MarkdownEditor'
-import Upload from '@/components/Upload/SingleImage3'
-import MDinput from '@/components/MDinput'
-import Sticky from '@/components/Sticky' // 粘性header组件
 import { validURL } from '@/utils/validate'
-import Warning from './Warning'
-import { CommentDropdown, PlatformDropdown, SourceUrlDropdown } from './Dropdown'
 
 const defaultForm = {
   status: 'draft',
@@ -100,7 +133,7 @@ const defaultForm = {
 
 export default {
   name: 'ArticleDetail',
-  components: { MarkdownEditor, MDinput, Upload, Sticky, Warning, CommentDropdown, PlatformDropdown, SourceUrlDropdown },
+  components: { MarkdownEditor },
   props: {
     isEdit: {
       type: Boolean,
