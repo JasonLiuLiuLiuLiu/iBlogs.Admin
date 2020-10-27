@@ -70,7 +70,7 @@
             type="primary"
             size="mini"
             icon="el-icon-edit"
-            @click="row.edit=!row.edit"
+            @click="editContent(row.id)"
           >
             Edit
           </el-button>
@@ -203,6 +203,15 @@ export default {
         setTimeout(() => {
           this.listLoading = false
         }, 1.5 * 1000)
+      })
+    },
+    editContent(id) {
+      this.$router.push({
+        path: '/content/edit',
+        query: {
+          id: id,
+          from: this.$route.fullPath
+        }
       })
     }
   }
