@@ -12,8 +12,8 @@
           </el-col>
           <el-col :span="12">
             <el-form-item prop="slug">
-              <el-input placeholder="自定义访问路径,如 my-first-article 默认为文章id" v-model="postForm.slug">
-                <template slot="prepend">Https://iblogs.site/article/</template>
+              <el-input v-model="postForm.slug" placeholder="自定义访问路径,如 my-first-article 默认为文章id">
+                <template slot="prepend">Https://iblogs.site/{{ contentType === 0 ? 'article/' : '' }}</template>
               </el-input>
             </el-form-item>
           </el-col>
@@ -21,18 +21,18 @@
         <el-row>
           <el-col :span="12">
             <el-form-item prop="tags">
-              <el-input-tag :value="postForm.tags"></el-input-tag>
+              <el-input-tag :value="postForm.tags" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item prop="category">
-              <el-select clearable v-model="postForm.category" placeholder="文章分类" style="width: 100%">
+              <el-select v-model="postForm.category" clearable placeholder="文章分类" style="width: 100%">
                 <el-option
                   v-for="item in categories"
                   :key="item.key"
                   :label="item.value"
-                  :value="item.value">
-                </el-option>
+                  :value="item.value"
+                />
               </el-select>
             </el-form-item>
           </el-col>
@@ -43,52 +43,40 @@
           </el-form-item>
         </el-row>
         <el-row>
-          <el-col :span="6">
+          <el-col :span="8">
             <el-form-item>
               <el-switch
-                style="display: block"
                 v-model="postForm.allowPing"
+                style="display: block"
                 active-color="#13ce66"
                 inactive-color="#ff4949"
                 active-text="允许Ping"
-                inactive-text="禁用Ping">
-              </el-switch>
+                inactive-text="禁用Ping"
+              />
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="8">
             <el-form-item>
               <el-switch
-                style="display: block"
                 v-model="postForm.allowComment"
+                style="display: block"
                 active-color="#13ce66"
                 inactive-color="#ff4949"
                 active-text="启用评论"
-                inactive-text="禁用评论">
-              </el-switch>
+                inactive-text="禁用评论"
+              />
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="8">
             <el-form-item>
               <el-switch
-                style="display: block"
                 v-model="postForm.allowFeed"
+                style="display: block"
                 active-color="#13ce66"
                 inactive-color="#ff4949"
                 active-text="允许订阅"
-                inactive-text="禁止订阅">
-              </el-switch>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item>
-              <el-switch
-                style="display: block"
-                v-model="postForm.haveImage"
-                active-color="#13ce66"
-                inactive-color="#ff4949"
-                active-text="启用缩略图"
-                inactive-text="禁用缩略图">
-              </el-switch>
+                inactive-text="禁止订阅"
+              />
             </el-form-item>
           </el-col>
         </el-row>
@@ -98,8 +86,8 @@
               <el-date-picker
                 v-model="postForm.createdTime"
                 type="datetime"
-                placeholder="选择日期时间">
-              </el-date-picker>
+                placeholder="选择日期时间"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="6" :offset="12">
@@ -119,21 +107,24 @@
 import MarkdownEditor from '@/components/MarkdownEditor'
 import ElInputTag from '@/components/ElInputTag'
 import { page } from '@/api/meta'
+import { details } from '@/api/content'
 
 const defaultForm = {
   id: '',
   title: '',
   slug: '',
-  tags: '',
-  category: '',
+  tags: [],
+  category: {
+    id: '',
+    name: ''
+  },
   content: '',
   status: 'draft',
   fmtType: 'markdown',
-  allowComment: true,
-  allowPing: true,
-  allowFeed: true,
-  createdTime: '',
-  haveImage: ''
+  allowComment: false,
+  allowPing: false,
+  allowFeed: false,
+  created: ''
 }
 
 export default {
@@ -171,22 +162,17 @@ export default {
         type: 1
       },
       categories: '',
-      fromPage: 'article'
+      fromPage: '/',
+      contentType: 0
     }
   },
-  computed: {
-
-  },
+  computed: {},
   created() {
     page(this.categoryQuery).then(response => {
       this.categories = response.data.list.map(v => {
         return { key: v.id, value: v.name }
       })
     })
-    if (this.isEdit) {
-      const id = this.$route.params && this.$route.params.id
-      this.fetchData(id)
-    }
     const from = this.$route.query.from
     if (from) {
       this.fromPage = from
@@ -194,6 +180,11 @@ export default {
     const id = this.$route.query.id
     if (id) {
       this.postForm.id = id
+      this.fetchData(id)
+    }
+    const type = this.$route.query.type
+    if (type) {
+      this.contentType = type
     }
     // Why need to make a copy of this.$route here?
     // Because if you enter this page and quickly switch tag, may be in the execution of the setTagsViewTitle function, this.$route is no longer pointing to the current page
@@ -202,21 +193,13 @@ export default {
   },
   methods: {
     fetchData(id) {
-      /*      fetchArticle(id).then(response => {
-              this.postForm = response.data
-
-              // just for test
-              this.postForm.title += `   Article Id:${this.postForm.id}`
-              this.postForm.content_short += `   Article Id:${this.postForm.id}`
-
-              // set tagsview title
-              this.setTagsViewTitle()
-
-              // set page title
-              this.setPageTitle()
-            }).catch(err => {
-              console.log(err)
-            })*/
+      details({ id: id }).then(response => {
+        this.postForm = response.data
+        // set page title
+        this.setPageTitle()
+      }).catch(err => {
+        console.log(err)
+      })
     },
     setPageTitle() {
       const title = 'Edit Article'

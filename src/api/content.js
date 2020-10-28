@@ -23,3 +23,11 @@ export function deleteContent(data) {
     data
   })
 }
+
+export function details(data) {
+  return request({
+    url: '/content/details',
+    method: 'post',
+    data
+  })
+}

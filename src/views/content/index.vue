@@ -210,7 +210,8 @@ export default {
         path: '/content/edit',
         query: {
           id: id,
-          from: this.$route.fullPath
+          from: this.$route.fullPath,
+          type: this.listQuery.type
         }
       })
     }
