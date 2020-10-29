@@ -88,7 +88,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-form-item style="margin: 0">
+            <el-form-item style="margin: 0" prop="publishTm">
               <el-date-picker
                 v-model="publishTm"
                 type="datetime"
@@ -132,6 +132,7 @@ const defaultForm = {
   allowFeed: false,
   created: ''
 }
+var refreshIntervalId
 
 export default {
   name: 'ArticleDetail',
@@ -155,7 +156,8 @@ export default {
       rules: {
         title: [{ validator: validateRequire }],
         content: [{ validator: validateRequire }],
-        category: [{ validator: validateRequire }]
+        category: [{ validator: validateRequire }],
+        publishTm: [{ validator: validateRequire }]
       },
       tempRoute: {},
       isEdit: {
@@ -196,6 +198,7 @@ export default {
     if (type) {
       this.contentType = type
     }
+    refreshIntervalId = setInterval(this.autoSave, 10 * 1000)
     // Why need to make a copy of this.$route here?
     // Because if you enter this page and quickly switch tag, may be in the execution of the setTagsViewTitle function, this.$route is no longer pointing to the current page
     // https://github.com/PanJiaChen/vue-element-admin/issues/1221
@@ -244,6 +247,7 @@ export default {
             })
           })
           this.loading = false
+          clearInterval(refreshIntervalId)
         } else {
           this.postForm = beforeStatus
           console.log('error submit!!')
@@ -268,6 +272,18 @@ export default {
           showClose: true,
           duration: 1000
         })
+        clearInterval(refreshIntervalId)
+      })
+    },
+    autoSave() {
+      this.$refs.postForm.validate(valid => {
+        if (valid) {
+          if (!this.postForm.status) {
+            this.postForm.status = 'Draft'
+          }
+          this.postForm.created = new Date(this.publishTm).getTime()
+          save(this.postForm)
+        }
       })
     },
     backToList() {
