@@ -78,11 +78,11 @@ export default {
     },
     // handleSelect是自己实现的方法
     handleSelect(item) {
-      let addSuucess = false
+      let addSuccess = false
       if (this.addTag(this.newTag.trim())) {
-        addSuucess = true
+        addSuccess = true
       }
-      if (addSuucess) {
+      if (addSuccess) {
         this.tagChange()
         this.newTag = ''
       }
@@ -99,19 +99,19 @@ export default {
         e.stopPropagation()
         e.preventDefault()
       }
-      let addSuucess = false
+      let addSuccess = false
       if (this.newTag.includes(',')) {
         this.newTag.split(',').forEach(item => {
           if (this.addTag(item.trim())) {
-            addSuucess = true
+            addSuccess = true
           }
         })
       } else {
         if (this.addTag(this.newTag.trim())) {
-          addSuucess = true
+          addSuccess = true
         }
       }
-      if (addSuucess) {
+      if (addSuccess) {
         this.tagChange()
         this.newTag = ''
       }
@@ -140,6 +140,7 @@ export default {
     },
     tagChange() {
       this.$emit('input', this.innerTags)
+      this.$emit('update:value', this.innerTags)
     },
 
     // 下面两个方法是autocomplete相关的搜索方法

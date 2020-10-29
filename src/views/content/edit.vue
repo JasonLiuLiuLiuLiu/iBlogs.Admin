@@ -21,7 +21,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item prop="tags">
-              <el-input-tag :value="postForm.tags" />
+              <el-input-tag :value.sync="postForm.tags" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -39,11 +39,19 @@
         </el-row>
         <el-row>
           <el-form-item prop="content" style="margin-bottom: 30px;">
-            <markdown-editor ref="editor" :value="postForm.content" />
+            <editor
+              ref="content"
+              :initialValue="postForm.content"
+              :options="editorOptions"
+              height="600px"
+              initialEditType="markdown"
+              previewStyle="vertical"
+              @change="onEditChange"
+            />
           </el-form-item>
         </el-row>
         <el-row>
-          <el-col :span="8">
+          <el-col :span="4">
             <el-form-item>
               <el-switch
                 v-model="postForm.allowPing"
@@ -55,7 +63,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="4">
             <el-form-item>
               <el-switch
                 v-model="postForm.allowComment"
@@ -67,7 +75,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="4">
             <el-form-item>
               <el-switch
                 v-model="postForm.allowFeed"
@@ -79,19 +87,17 @@
               />
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="6">
-            <el-form-item>
+          <el-col :span="4">
+            <el-form-item style="margin: 0">
               <el-date-picker
-                v-model="postForm.createdTime"
+                v-model="publishTm"
                 type="datetime"
-                placeholder="选择日期时间"
+                placeholder="发布时间"
               />
             </el-form-item>
           </el-col>
-          <el-col :span="6" :offset="12">
-            <el-form-item>
+          <el-col :span="5" :offset="3">
+            <el-form-item style="margin: 0">
               <el-button @click="backToList">返回列表</el-button>
               <el-button type="primary">立即发布</el-button>
               <el-button type="warning">保存为草稿</el-button>
@@ -104,7 +110,10 @@
 </template>
 
 <script>
-import MarkdownEditor from '@/components/MarkdownEditor'
+import 'codemirror/lib/codemirror.css'
+import '@toast-ui/editor/dist/toastui-editor.css'
+
+import { Editor } from '@toast-ui/vue-editor'
 import ElInputTag from '@/components/ElInputTag'
 import { page } from '@/api/meta'
 import { details } from '@/api/content'
@@ -114,10 +123,7 @@ const defaultForm = {
   title: '',
   slug: '',
   tags: [],
-  category: {
-    id: '',
-    name: ''
-  },
+  category: '',
   content: '',
   status: 'draft',
   fmtType: 'markdown',
@@ -129,7 +135,7 @@ const defaultForm = {
 
 export default {
   name: 'ArticleDetail',
-  components: { MarkdownEditor, ElInputTag },
+  components: { Editor, ElInputTag },
   data() {
     const validateRequire = (rule, value, callback) => {
       if (value === '') {
@@ -163,7 +169,11 @@ export default {
       },
       categories: '',
       fromPage: '/',
-      contentType: 0
+      contentType: 0,
+      editorOptions: {
+        hideModeSwitch: true
+      },
+      publishTm: ''
     }
   },
   computed: {},
@@ -197,9 +207,21 @@ export default {
         this.postForm = response.data
         // set page title
         this.setPageTitle()
+        this.publishTm = this.postForm.created
+        if (this.postForm.fmtType === 'markdown') {
+          this.$refs.content.invoke('setMarkdown', this.postForm.content)
+        } else {
+          this.$refs.content.invoke('setHtml', this.postForm.content)
+        }
       }).catch(err => {
         console.log(err)
       })
+    },
+    // https://nhn.github.io/tui.editor/latest/ToastUIEditor#addHook
+    // https://github.com/nhn/tui.editor/tree/master/apps/vue-editor
+    onEditChange() {
+      this.postForm.content = this.$refs.content.invoke('getMarkdown')
+      this.postForm.fmtType = 'markdown'
     },
     setPageTitle() {
       const title = 'Edit Article'
