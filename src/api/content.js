@@ -31,3 +31,11 @@ export function details(data) {
     data
   })
 }
+
+export function save(data) {
+  return request({
+    url: '/content/save',
+    method: 'post',
+    data
+  })
+}

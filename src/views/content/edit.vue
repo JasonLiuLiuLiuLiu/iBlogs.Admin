@@ -99,8 +99,8 @@
           <el-col :span="5" :offset="3">
             <el-form-item style="margin: 0">
               <el-button @click="backToList">返回列表</el-button>
-              <el-button type="primary">立即发布</el-button>
-              <el-button type="warning">保存为草稿</el-button>
+              <el-button type="primary" @click="submitForm">立即发布</el-button>
+              <el-button type="warning" @click="draftForm">保存为草稿</el-button>
             </el-form-item>
           </el-col>
         </el-row>
@@ -116,7 +116,7 @@ import '@toast-ui/editor/dist/toastui-editor.css'
 import { Editor } from '@toast-ui/vue-editor'
 import ElInputTag from '@/components/ElInputTag'
 import { page } from '@/api/meta'
-import { details } from '@/api/content'
+import { details, save } from '@/api/content'
 
 const defaultForm = {
   id: '',
@@ -229,18 +229,23 @@ export default {
     },
     submitForm() {
       console.log(this.postForm)
+      const beforeStatus = this.postForm.status
+      this.postForm.status = 'Published'
+      this.postForm.created = new Date(this.publishTm).getTime()
       this.$refs.postForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$notify({
-            title: '成功',
-            message: '发布文章成功',
-            type: 'success',
-            duration: 2000
+          save(this.postForm).then(r => {
+            this.$notify({
+              title: '成功',
+              message: '发布文章成功',
+              type: 'success',
+              duration: 2000
+            })
           })
-          this.postForm.status = 'published'
           this.loading = false
         } else {
+          this.postForm = beforeStatus
           console.log('error submit!!')
           return false
         }
@@ -248,19 +253,22 @@ export default {
     },
     draftForm() {
       if (this.postForm.content.length === 0 || this.postForm.title.length === 0) {
+        this.postForm.created = new Date(this.publishTm).getTime()
         this.$message({
           message: '请填写必要的标题和内容',
           type: 'warning'
         })
         return
       }
-      this.$message({
-        message: '保存成功',
-        type: 'success',
-        showClose: true,
-        duration: 1000
+      this.postForm.status = 'Draft'
+      save(this.postForm).then(r => {
+        this.$message({
+          message: '保存成功',
+          type: 'success',
+          showClose: true,
+          duration: 1000
+        })
       })
-      this.postForm.status = 'draft'
     },
     backToList() {
       this.$router.push(this.fromPage)
