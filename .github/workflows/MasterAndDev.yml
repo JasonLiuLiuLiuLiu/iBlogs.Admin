@@ -33,7 +33,7 @@ jobs:
         uses: garygrossgarten/github-action-scp@release
         with:
             local: dist
-            remote: /usr/share/nginx/html
+            remote: /usr/share/nginx/admin
             host: ${{ secrets.SCP_SERVER }}
             username: ${{ secrets.SCP_USERNAME }}
             password: ${{ secrets.SCP_PASSWORD }}
