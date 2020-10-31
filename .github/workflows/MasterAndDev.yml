@@ -1,0 +1,40 @@
+name: master
+
+on:
+  push:
+    branches: 
+      - main
+      - dev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      # Runs a single command using the runners shell
+      - name: npm install
+        run:
+          npm install
+          # Runs a single command using the runners shell
+      - name: npm build
+        run: npm run build:prod
+
+      - name: Scp Deploy Actions
+        uses: garygrossgarten/github-action-scp@release
+        with:
+            local: dist
+            remote: /usr/share/nginx/html
+            host: ${{ secrets.SCP_SERVER }}
+            username: ${{ secrets.SCP_USERNAME }}
+            password: ${{ secrets.SCP_PASSWORD }}
+            port: ${{ secrets.SCP_PORT }}
