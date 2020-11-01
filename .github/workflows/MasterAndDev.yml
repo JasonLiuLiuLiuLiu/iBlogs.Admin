@@ -33,8 +33,8 @@ jobs:
         run: |
           wget http://gosspublic.alicdn.com/ossutil/1.6.19/ossutil64       
           chmod 755 ossutil64
-          ossutil64 config -e oss-cn-beijing.aliyuncs.com -i ${{ secrets.ALIYUN_OSS_ACCESS_KEY_ID }} -k ${{ secrets.ALIYUN_OSS_ACCESS_KEY_SECRET }} -L CH -c /myconfig
-          ossutil64 cp ./dist oss://iblogs-admin/
+          ./ossutil64 config -e oss-cn-beijing.aliyuncs.com -i ${{ secrets.ALIYUN_OSS_ACCESS_KEY_ID }} -k ${{ secrets.ALIYUN_OSS_ACCESS_KEY_SECRET }} -L CH -c /myconfig
+          ./ossutil64 cp ./dist oss://iblogs-admin/
 
       # - name: Scp Deploy Actions
       #   uses: garygrossgarten/github-action-scp@release
